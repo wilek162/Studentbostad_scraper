@@ -35,4 +35,4 @@ jobs:
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         run: |
           cd studentbostad_scraper/studentbostad_scraper/spiders
-          scrapy crawl number_checker
+          scrapy crawl spider
