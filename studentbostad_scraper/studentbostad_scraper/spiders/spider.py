@@ -2,6 +2,8 @@ import re
 import scrapy
 from scrapy_splash import SplashRequest
 import json
+import yagmail
+import os
 
 class MySpider(scrapy.Spider):
     name = "spider"
@@ -32,9 +34,26 @@ class MySpider(scrapy.Spider):
                 self.log(f"Number did not increase. Previous: {previous_number}, Current: {current_number}")
         else:
             self.log("No previous data found, storing the current number.")
+        self.send_email_notification(previous_number, current_number)
+
 
         # Save the current number for the next run
         self.save_current_number(current_number)
+        
+
+    def send_email_notification(self, old_number, new_number):
+        if not self.email_sent:
+            email_user = os.getenv('EMAIL_USER')
+            email_password = os.getenv('EMAIL_PASSWORD')
+            yag = yagmail.SMTP(email_user, email_password)
+            yag.send(
+                to='eboggeno@email1.io',
+                subject='Number Change Detected',
+                contents=f"The number increased from {old_number} to {new_number}."
+            )
+            self.log("Email sent!")
+            self.email_sent = True
+
 
     def load_previous_number(self):
         try:
