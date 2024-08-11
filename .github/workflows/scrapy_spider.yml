@@ -34,4 +34,4 @@ jobs:
         env:
           SPLASH_URL: http://localhost:8050
         run: |
-          scrapy crawl number_checker
+          scrapy crawl spider
