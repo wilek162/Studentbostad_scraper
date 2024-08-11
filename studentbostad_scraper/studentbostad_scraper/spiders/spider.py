@@ -49,10 +49,10 @@ class MySpider(scrapy.Spider):
             response =  requests.post(
   		f"https://api.mailgun.net/v3/{domain}/messages",
   		auth=("api", api_key),
-  		data={"from": "Excited User <mailgun@sandbox5dd303842dbf45c4a0cf11dc6caf1f6d.mailgun.org>",
-  			"to": ["eboggeno@email1.io", "YOU@sandbox5dd303842dbf45c4a0cf11dc6caf1f6d.mailgun.org"],
+  		data={"from": f"User <mailgun@{domain}>",
+  			"to": ["eboggeno@email1.io", f"YOU@{domain}"],
   			"subject": "Hello",
-  			"text": "Testing some Mailgun awesomeness!"})
+  			"text": "Testing!"})
 
             # Check if the email was sent successfully
             if response.status_code == 200:
