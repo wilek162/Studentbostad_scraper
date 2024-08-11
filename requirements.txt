@@ -1,0 +1,7 @@
+# requests library to make HTTP requests web scraping and web interactions.
+requests
+
+# scrapy is framework that facilitates web crawling, scraping, and data extraction.
+scrapy==2.11.2
+
+scrapy-splash==0.9.0
