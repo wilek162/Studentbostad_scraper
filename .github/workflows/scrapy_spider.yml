@@ -34,4 +34,5 @@ jobs:
         env:
           SPLASH_URL: http://localhost:8050
         run: |
+          cd studentbostad_scraper/studentbostad_scraper/spiders
           scrapy crawl spider
