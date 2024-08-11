@@ -1,0 +1,37 @@
+name: Run Scrapy Spider
+
+# Controls when the action will run
+on:
+  schedule:
+    # Runs every 6 hours
+    - cron: "0 */6 * * *"
+  workflow_dispatch: # Allows manual triggering from the Actions tab
+
+jobs:
+  run-spider:
+    runs-on: ubuntu-latest
+
+    services:
+      splash:
+        image: scrapinghub/splash
+        options: --privileged --name splash -p 8050:8050
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Scrapy Spider
+        env:
+          SPLASH_URL: http://localhost:8050
+        run: |
+          scrapy crawl number_checker
