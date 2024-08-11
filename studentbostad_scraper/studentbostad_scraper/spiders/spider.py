@@ -49,7 +49,7 @@ class MySpider(scrapy.Spider):
             response =  requests.post(
   		f"https://api.mailgun.net/v3/{domain}/messages",
   		auth=("api", api_key),
-  		data={"from": f"User <mailgun{domain}>",
+  		data={"from": f"User <mailgun@{domain}>",
   			"to": ["eboggeno@email1.io", f"YOU@{domain}"],
   			"subject": "Hello",
   			"text": "Testing!"})
