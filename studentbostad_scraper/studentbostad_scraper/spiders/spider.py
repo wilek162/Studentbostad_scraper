@@ -10,7 +10,7 @@ class MySpider(scrapy.Spider):
     start_urls = ['https://www.studentbostader.se/soker-bostad/lediga-bostader/?pagination=1&paginationantal=100']  # Replace with your target URL
 
     previous_number_file = 'previous_number.json'
-
+    email_sent = False
     def start_requests(self):
         for url in self.start_urls:
             yield SplashRequest(url, self.parse, args={'wait': 3})
