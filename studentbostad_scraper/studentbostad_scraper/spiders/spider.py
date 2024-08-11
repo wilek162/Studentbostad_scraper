@@ -1,4 +1,5 @@
 import re
+import requests
 import scrapy
 from scrapy_splash import SplashRequest
 import json
@@ -43,17 +44,24 @@ class MySpider(scrapy.Spider):
 
     def send_email_notification(self, old_number, new_number):
         if not self.email_sent:
-            email_user = os.getenv('EMAIL_USER')
-            email_password = os.getenv('EMAIL_PASSWORD')
-            yag = yagmail.SMTP(email_user, email_password)
-            yag.send(
-                to='eboggeno@email1.io',
-                subject='Number Change Detected',
-                contents=f"The number increased from {old_number} to {new_number}."
-            )
-            self.log("Email sent!")
-            self.email_sent = True
+            domain = os.getenv('DOMAIN')
+            api_key = os.getenv('API_KEY')     
+            response =  requests.post(
+  		f"https://api.mailgun.net/v3/{domain}/messages",
+  		auth=("api", api_key),
+  		data={"from": f"User <{domain}>",
+  			"to": ["eboggeno@email1.io", f"YOU@{domain}"],
+  			"subject": "Hello",
+  			"text": "Testing!"})
 
+            # Check if the email was sent successfully
+            if response.status_code == 200:
+                self.log("Email sent successfully!")
+            else:
+                self.log(f"Failed to send email: {response.text}")
+
+            # Ensure we only send the email once per run
+            self.email_sent = True
 
     def load_previous_number(self):
         try:
