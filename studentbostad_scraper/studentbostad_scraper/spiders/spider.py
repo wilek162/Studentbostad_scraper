@@ -49,29 +49,17 @@ class MySpider(scrapy.Spider):
             return
 
         # Initialize the Mailjet client
-        mailjet = Client(auth=(api_key, api_secret), version='v3.1')
+        mailjet = Client(auth=(api_key, api_secret))
 
         # Create the email payload
         data = {
-            'Messages': [
-                            {
-                                    "From": {
-                                            "Email": "w05446795@gmail.com",
-                                            "Name": "Mailjet Pilot"
-                                    },
-                                    "To": [
-                                            {
-                                                    "Email": "pederburrstock@gmail.com",
-                                                    "Name": "passenger 1"
-                                            }
-                                    ],
-                                    "Subject": "Your email flight plan!",
-                                    "TextPart": "Dear passenger 1, welcome to Mailjet! May the delivery force be with you!",
-                                    "HTMLPart": "<h3>Dear passenger 1, welcome to <a href=\"https://www.mailjet.com/\">Mailjet</a>!</h3><br />May the delivery force be with you!"
-                            }
-                    ]
-            }
-
+                'FromEmail': 'w05446795@gmail.com',
+                'FromName': 'SENDER_NAME',
+                'Subject': 'Your email flight plan!',
+                'Text-part': 'Dear passenger, welcome to Mailjet! May the delivery force be with you!',
+                'Html-part': '<h3>Dear passenger, welcome to <a href=\"https://www.mailjet.com/\">Mailjet</a>!<br />May the delivery force be with you!',
+                'Recipients': [{'Email': 'pederburrstock@gmail.com'}]
+                }
         # Send the email
         try:
             result = mailjet.send.create(data=data)
