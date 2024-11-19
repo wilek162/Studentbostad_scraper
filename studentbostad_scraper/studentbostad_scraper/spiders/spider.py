@@ -1,5 +1,4 @@
 import re
-import requests
 import scrapy
 from scrapy_splash import SplashRequest
 import json
@@ -66,7 +65,7 @@ class MySpider(scrapy.Spider):
         result = mailjet.send.create(data=data)
         if result.status_code == 200:
             self.log("Email sent successfully!")
-            self.log("RESULT: ", result.json())
+            self.log("RESULT: ", result.text)
         else:
             self.log(f"Failed to send email: {result.status_code} - {result.text}")
         
