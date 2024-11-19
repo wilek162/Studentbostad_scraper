@@ -57,7 +57,7 @@ class MySpider(scrapy.Spider):
             'Subject': 'Your email flight plan!',
             'Text-part': 'Dear passenger, welcome to Mailjet! May the delivery force be with you!',
             'Html-part': '<h3>Dear passenger, welcome to <a href=\"https://www.mailjet.com/\">Mailjet</a>!<br />May the delivery force be with you!',
-            'Recipients': [{'Email': 'pederburrstock@gmail.com'}]
+            'Recipients': [{'Email': 'ujvuungpe@email1.io'}]
             }
         self.log(data)
         # Send the email
