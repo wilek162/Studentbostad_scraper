@@ -53,13 +53,13 @@ class MySpider(scrapy.Spider):
 
         # Create the email payload
         data = {
-                'FromEmail': 'w05446795@gmail.com',
-                'FromName': 'SENDER_NAME',
-                'Subject': 'Your email flight plan!',
-                'Text-part': 'Dear passenger, welcome to Mailjet! May the delivery force be with you!',
-                'Html-part': '<h3>Dear passenger, welcome to <a href=\"https://www.mailjet.com/\">Mailjet</a>!<br />May the delivery force be with you!',
-                'Recipients': [{'Email': 'pederburrstock@gmail.com'}]
-                }
+            'FromEmail': 'w05446795@gmail.com',
+            'FromName': 'SENDER_NAME',
+            'Subject': 'Your email flight plan!',
+            'Text-part': 'Dear passenger, welcome to Mailjet! May the delivery force be with you!',
+            'Html-part': '<h3>Dear passenger, welcome to <a href=\"https://www.mailjet.com/\">Mailjet</a>!<br />May the delivery force be with you!',
+            'Recipients': [{'Email': 'pederburrstock@gmail.com'}]
+            }
         # Send the email
         try:
             result = mailjet.send.create(data=data)
