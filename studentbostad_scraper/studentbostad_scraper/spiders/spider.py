@@ -75,6 +75,7 @@ class MySpider(scrapy.Spider):
         # Send the email
         try:
             result = mailjet.send.create(data=data)
+            print("RESULT: ", result)
             if result.status_code == 200:
                 self.log("Email sent successfully!")
             else:
