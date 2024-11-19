@@ -61,7 +61,7 @@ class MySpider(scrapy.Spider):
                     },
                     "To": [
                         {
-                            "Email": "ujvuungpe@email1.io",  # Replace with the recipient's email
+                            "Email": "w05446795@gmail.com",  # Replace with the recipient's email
                             "Name": "Recipient Name"
                         }
                     ],
