@@ -3,8 +3,8 @@ import requests
 import scrapy
 from scrapy_splash import SplashRequest
 import json
-import yagmail
 import os
+from mailjet_rest import Client
 
 class MySpider(scrapy.Spider):
     name = "spider"
@@ -36,32 +36,82 @@ class MySpider(scrapy.Spider):
         else:
             self.log("No previous data found, storing the current number.")
         self.send_email_notification(previous_number, current_number)
-
-
         # Save the current number for the next run
         self.save_current_number(current_number)
         
+    def send_email_with_mailjet(self, subject, body):
+        # Get Mailjet API keys from environment variables (or set them directly here)
+        api_key = os.getenv('MAILJET_API_KEY')  # Your Mailjet public API key
+        api_secret = os.getenv('MAILJET_API_SECRET')  # Your Mailjet private API key
 
-    def send_email_notification(self, old_number, new_number):
-        if not self.email_sent:
-            domain = os.getenv('DOMAIN')
-            api_key = os.getenv('API_KEY')     
-            response =  requests.post(
-  		f"https://api.mailgun.net/v3/{domain}/messages",
-  		auth=("api", api_key),
-  		data={"from": f"User <mailgun@{domain}>",
-  			"to": ["eboggeno@email1.io", f"YOU@{domain}"],
-  			"subject": "Hello",
-  			"text": "Testing!"})
+        if not api_key or not api_secret:
+            self.log("API keys are missing.")
+            return
 
-            # Check if the email was sent successfully
-            if response.status_code == 200:
+        # Initialize the Mailjet client
+        mailjet = Client(auth=(api_key, api_secret), version='v3.1')
+
+        # Create the email payload
+        data = {
+            'Messages': [
+                {
+                    "From": {
+                        "Email": "w05446795@gmail.com",  # Replace with your email
+                        "Name": "My Name Here"
+                    },
+                    "To": [
+                        {
+                            "Email": "ujvuungpe@email1.io",  # Replace with the recipient's email
+                            "Name": "Recipient Name"
+                        }
+                    ],
+                    "Subject": subject,
+                    "TextPart": body,
+                    "HTMLPart": f"<p>{body}</p>",
+                }
+            ]
+        }
+
+        # Send the email
+        try:
+            result = mailjet.send.create(data=data)
+            if result.status_code == 200:
                 self.log("Email sent successfully!")
             else:
-                self.log(f"Failed to send email: {response.text}")
+                self.log(f"Failed to send email: {result.status_code} - {result.text}")
+        except Exception as e:
+            self.log(f"An error occurred while sending the email: {str(e)}")
+            
+    def send_email_notification(self, old_number, new_number):
+        if not self.email_sent:
+            subject = "Scrapy Spider Update - Number of Listings"
+            body = f"Old Number: {old_number}\nNew Number: {new_number}\n\nThe number of listings has been updated."
+
+            # Send email using Mailjet API
+            self.send_email_with_mailjet(subject, body)
 
             # Ensure we only send the email once per run
-            self.email_sent = True
+            self.email_sent = True        
+    # def send_email_notification(self, old_number, new_number):
+    #     if not self.email_sent:
+    #         domain = os.getenv('DOMAIN')
+    #         api_key = os.getenv('API_KEY')     
+    #         response =  requests.post(
+  	# 	f"https://api.mailgun.net/v3/{domain}/messages",
+  	# 	auth=("api", api_key),
+  	# 	data={"from": f"User <mailgun@{domain}>",
+  	# 		"to": ["eboggeno@email1.io", f"YOU@{domain}"],
+  	# 		"subject": "Hello",
+  	# 		"text": "Testing!"})
+
+    #         # Check if the email was sent successfully
+    #         if response.status_code == 200:
+    #             self.log("Email sent successfully!")
+    #         else:
+    #             self.log(f"Failed to send email: {response.text}")
+
+    #         # Ensure we only send the email once per run
+    #         self.email_sent = True
 
     def load_previous_number(self):
         try:

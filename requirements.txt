@@ -5,3 +5,4 @@ six
 scrapy==2.11.2
 scrapy-splash==0.9.0
 yagmail==0.15.293 
+mailjet-rest
