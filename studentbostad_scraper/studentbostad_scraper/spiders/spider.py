@@ -60,6 +60,7 @@ class MySpider(scrapy.Spider):
             'Html-part': '<h3>Dear passenger, welcome to <a href=\"https://www.mailjet.com/\">Mailjet</a>!<br />May the delivery force be with you!',
             'Recipients': [{'Email': 'pederburrstock@gmail.com'}]
             }
+        self.log(data)
         # Send the email
         try:
             result = mailjet.send.create(data=data)
