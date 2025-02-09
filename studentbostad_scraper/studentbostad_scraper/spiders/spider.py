@@ -49,8 +49,8 @@ class MySpider(scrapy.Spider):
 
     def send_email_notification(self, old_number, new_number):
         if not self.email_sent:
-            sender = "Private Person <hello@demomailtrap.com>"
-            receiver = "A Test User <pederburrstock@gmail.com>"
+            sender = "hello@demomailtrap.com"
+            receiver = "pederburrstock@gmail.com"
             message = f"""\
             Subject: Hi Mailtrap
             To: {receiver}
@@ -58,7 +58,7 @@ class MySpider(scrapy.Spider):
             This is a test e-mail message."""
             with smtplib.SMTP("live.smtp.mailtrap.io", 587) as server:
                 server.starttls()
-                server.login("smtp@mailtrap.io", "50f0cf40cbfb792bfe8d2b9d6d39ad8a")
+                server.login("api", "50f0cf40cbfb792bfe8d2b9d6d39ad8a")
                 server.sendmail(sender, receiver, message)
             #         # Ensure we only send the email once per run
             self.email_sent = True
