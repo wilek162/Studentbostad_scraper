@@ -1,3 +1,5 @@
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 import re
 import smtplib
 import scrapy
@@ -56,12 +58,18 @@ class MySpider(scrapy.Spider):
             To: {receiver}
             From: {sender}
             This is a test e-mail message."""
+            msg = MIMEMultipart()
+            msg["From"] = sender
+            msg["To"] = receiver
+            msg["Subject"] = "hELLO"
+            msg.attach(MIMEText("A body", "plain"))
+
+            # Send Email
             with smtplib.SMTP("live.smtp.mailtrap.io", 587) as server:
-                server.starttls()
+                server.starttls()  # Secure the connection
                 server.login("api", "50f0cf40cbfb792bfe8d2b9d6d39ad8a")
-                server.sendmail(sender, receiver, message)
-            #         # Ensure we only send the email once per run
-            self.email_sent = True
+                server.sendmail(sender, receiver, msg.as_string())
+                print("✅ Email sent successfully!")
 
     def load_previous_number(self):
         try:
