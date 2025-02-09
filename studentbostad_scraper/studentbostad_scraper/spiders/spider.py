@@ -49,7 +49,7 @@ class MySpider(scrapy.Spider):
 
     def send_email_notification(self, old_number, new_number):
         if not self.email_sent:
-            sender = "hello@demomailtrap.com"
+            sender = "pederburrstock@gmail.com"
             receiver = "pederburrstock@gmail.com"
             message = f"""\
             Subject: Hi Mailtrap
