@@ -51,7 +51,7 @@ class MySpider(scrapy.Spider):
         if not self.email_sent:
             sender = "hello@demomailtrap.com"
             receiver = "pederburrstock@gmail.com"
-            message = f"""\
+            message = f"""\From: hello@demomailtrap.com\n
             Subject: Hi Mailtrap
             To: {receiver}
             From: {sender}
