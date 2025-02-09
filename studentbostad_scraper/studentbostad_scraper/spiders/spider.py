@@ -51,6 +51,7 @@ class MySpider(scrapy.Spider):
 
     def send_email_notification(self, old_number, new_number):
         if not self.email_sent:
+            SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
             sender = "hello@demomailtrap.com"
             receiver = "pederburrstock@gmail.com"
             message = f"""\From: hello@demomailtrap.com\n
@@ -63,11 +64,10 @@ class MySpider(scrapy.Spider):
             msg["To"] = receiver
             msg["Subject"] = "hELLO"
             msg.attach(MIMEText("A body", "plain"))
-
             # Send Email
             with smtplib.SMTP("live.smtp.mailtrap.io", 587) as server:
-                server.starttls()  # Secure the connection
-                server.login("api", "50f0cf40cbfb792bfe8d2b9d6d39ad8a")
+                server.starttls()
+                server.login("api", SMTP_PASSWORD)
                 server.sendmail(sender, receiver, msg.as_string())
                 print("✅ Email sent successfully!")
 
