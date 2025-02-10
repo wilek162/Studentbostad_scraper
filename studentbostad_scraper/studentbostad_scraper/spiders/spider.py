@@ -7,8 +7,8 @@ from scrapy_splash import SplashRequest
 import os
 
 
-class MySpider(scrapy.Spider):
-    name = "spider"
+class StudentbostadSpider(scrapy.Spider):
+    name = "studentbostad_spider"
     start_urls = [
         "https://www.studentbostader.se/soker-bostad/lediga-bostader/?pagination=1&paginationantal=100"
     ]
@@ -52,4 +52,4 @@ class MySpider(scrapy.Spider):
             server.starttls()
             server.login("api", SMTP_PASSWORD)
             server.sendmail(sender, receiver, msg.as_string())
-            print("✅ Email sent successfully!")
+            self.log("✅ Email sent successfully!")

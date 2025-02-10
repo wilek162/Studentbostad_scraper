@@ -1,5 +1,4 @@
 name: Run Scrapy Spider
-
 # Controls when the action will run
 on:
   schedule:
@@ -41,4 +40,4 @@ jobs:
 
         run: |
           cd studentbostad_scraper/studentbostad_scraper/spiders
-          scrapy crawl spider
+          scrapy crawl studentbostad_spider
