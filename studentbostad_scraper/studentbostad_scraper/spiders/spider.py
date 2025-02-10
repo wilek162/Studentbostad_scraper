@@ -15,7 +15,6 @@ class MySpider(scrapy.Spider):
     ]  # Replace with your target URL
 
     previous_number_file = "previous_number.json"
-    email_sent = False
 
     def start_requests(self):
         for url in self.start_urls:
@@ -33,43 +32,46 @@ class MySpider(scrapy.Spider):
         # Load the previous number from a file
         previous_number = self.load_previous_number()
 
-        # Compare the numbers and log the result
-        if previous_number is not None:
-            if current_number > previous_number:
-                self.log(
-                    f"Number increased! Previous: {previous_number}, Current: {current_number}"
-                )
-            else:
-                self.log(
-                    f"Number did not increase. Previous: {previous_number}, Current: {current_number}"
-                )
+        # Compare the numbers
+        if previous_number is None:
+            self.log(f"First run: Storing the current number {current_number}.")
+            self.save_current_number(current_number)
+            return
+
+        if current_number != previous_number:
+            self.log(
+                f"Number changed! Previous: {previous_number}, Current: {current_number}. Sending email."
+            )
+            self.send_email_notification(previous_number, current_number)
         else:
-            self.log("No previous data found, storing the current number.")
-        self.send_email_notification(previous_number, current_number)
+            self.log("No new listings found. No email sent.")
+
         # Save the current number for the next run
         self.save_current_number(current_number)
 
     def send_email_notification(self, old_number, new_number):
-        if not self.email_sent:
-            SMTP_PASSWORD = os.environ["SMTP_PASSWORD"]
-            sender = "hello@demomailtrap.com"
-            receiver = "pederburrstock@gmail.com"
-            message = f"""\From: hello@demomailtrap.com\n
-            Subject: Hi Mailtrap
-            To: {receiver}
-            From: {sender}
-            This is a test e-mail message."""
-            msg = MIMEMultipart()
-            msg["From"] = sender
-            msg["To"] = receiver
-            msg["Subject"] = "hELLO"
-            msg.attach(MIMEText("A body", "plain"))
-            # Send Email
-            with smtplib.SMTP("live.smtp.mailtrap.io", 587) as server:
-                server.starttls()
-                server.login("api", SMTP_PASSWORD)
-                server.sendmail(sender, receiver, msg.as_string())
-                print("✅ Email sent successfully!")
+        SMTP_PASSWORD = os.environ["SMTP_PASSWORD"]
+        sender = "hello@demomailtrap.com"
+        receiver = "pederburrstock@gmail.com"
+        message = f"""\
+        From: {sender}
+        To: {receiver}
+        Subject: Listings Updated
+
+        The number of listings has changed from {old_number} to {new_number}.
+        """
+        msg = MIMEMultipart()
+        msg["From"] = sender
+        msg["To"] = receiver
+        msg["Subject"] = "Listings Updated"
+        msg.attach(MIMEText(message, "plain"))
+
+        # Send Email
+        with smtplib.SMTP("live.smtp.mailtrap.io", 587) as server:
+            server.starttls()
+            server.login("api", SMTP_PASSWORD)
+            server.sendmail(sender, receiver, msg.as_string())
+            print("✅ Email sent successfully!")
 
     def load_previous_number(self):
         try:
