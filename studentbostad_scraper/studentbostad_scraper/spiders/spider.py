@@ -11,7 +11,7 @@ class MySpider(scrapy.Spider):
     name = "spider"
     start_urls = [
         "https://www.studentbostader.se/soker-bostad/lediga-bostader/?pagination=1&paginationantal=100"
-    ]  # Replace with your target URL
+    ]
 
     def start_requests(self):
         for url in self.start_urls:
@@ -28,23 +28,26 @@ class MySpider(scrapy.Spider):
             self.log("Number not found")
 
     def send_email_notification(self, current_number):
+        page_url = "https://www.studentbostader.se/soker-bostad/lediga-bostader/?pagination=1&paginationantal=100"
         SMTP_PASSWORD = os.environ["SMTP_PASSWORD"]
         sender = "hello@demomailtrap.com"
         receiver = "pederburrstock@gmail.com"
         message = f"""\
-        From: {sender}
-        To: {receiver}
-        Subject: Listings Update
+    From: {sender}
+    To: {receiver}
+    Subject: Listings Update
 
-        The current number of listings is {current_number}.
-        """
+    The current number of listings is {current_number}.
+
+    Link to page:
+    {page_url}
+    """
         msg = MIMEMultipart()
         msg["From"] = sender
         msg["To"] = receiver
         msg["Subject"] = "Listings Update"
         msg.attach(MIMEText(message, "plain"))
 
-        # Send Email
         with smtplib.SMTP("live.smtp.mailtrap.io", 587) as server:
             server.starttls()
             server.login("api", SMTP_PASSWORD)
