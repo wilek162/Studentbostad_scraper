@@ -51,7 +51,7 @@ class MySpider(scrapy.Spider):
 
     def send_email_notification(self, old_number, new_number):
         if not self.email_sent:
-            SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
+            SMTP_PASSWORD = os.environ["SMTP_PASSWORD"]
             sender = "hello@demomailtrap.com"
             receiver = "pederburrstock@gmail.com"
             message = f"""\From: hello@demomailtrap.com\n
