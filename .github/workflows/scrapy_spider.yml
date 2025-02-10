@@ -34,8 +34,6 @@ jobs:
           SPLASH_URL: http://localhost:8050
           API_KEY: ${{ secrets.API_KEY }}
           DOMAIN: ${{ secrets.DOMAIN }}
-          MAILJET_API_KEY: ${{ secrets.MAILJET_API_KEY}}
-          MAILJET_API_SECRET: ${{ secrets.MAILJET_API_SECRET}}
           SMTP_PASSWORD: ${{secrets.SMTP_PASSWORD}}
 
         run: |
